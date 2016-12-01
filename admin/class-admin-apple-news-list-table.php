@@ -347,6 +347,12 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			}
 		}
 
+		// Add the category filter if set
+		$category = $this->get_category_filter();
+		if ( ! empty( $category ) ) {
+			$args['cat'] = $category;
+		}
+
 		// Add the date filters if set
 		$date_from = $this->get_date_from_filter();
 		$date_to = $this->get_date_to_filter();
@@ -402,6 +408,9 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		// Add a publish state filter
 		$this->publish_status_filter_field();
 
+		// Add a category filter
+		$this->categories_filter_field();
+
 		// Add a dange range filter
 		$this->date_range_filter_field();
 
@@ -422,6 +431,16 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	protected function get_publish_status_filter() {
 		return ( empty( $_GET['apple_news_publish_status'] ) ) ? '' : sanitize_text_field( $_GET['apple_news_publish_status'] );
+	}
+
+	/**
+	 * Get the current category filter value.
+	 *
+	 * @return string
+	 * @access protected
+	 */
+	protected function get_category_filter() {
+		return ( empty( $_GET['apple_news_category'] ) ) ? '' : sanitize_text_field( $_GET['apple_news_category'] );
 	}
 
 	/**
@@ -478,6 +497,43 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $value ),
 				selected( $value, $this->get_publish_status_filter(), false ),
+				esc_html( $label )
+			);
+		}
+		?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * Display a dropdown to filter by categories.
+	 *
+	 * @access protected
+	 */
+	protected function categories_filter_field() {
+		// Add available categories
+		// ( ! empty( $this->settings->get( 'categories' ) ) && empty( array_intersect( wp_get_post_categories($id), $this->settings->get( 'categories' ) ) ) )
+		
+		$categories = array(
+			'' => 'Show All Categories'
+		);
+		$categories_obj = get_categories();
+
+		if ( ! empty( $categories_obj ) ) {
+			foreach ( $categories_obj as $category ) {
+				$categories[ strval($category->term_id) ] = $category->name;
+			}
+		}
+
+		// Build the dropdown
+		?>
+		<select name="apple_news_category" id="apple_news_category">
+		<?php
+		foreach ( $categories as $value => $label ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $value ),
+				selected( $value, $this->get_category_filter(), false ),
 				esc_html( $label )
 			);
 		}
