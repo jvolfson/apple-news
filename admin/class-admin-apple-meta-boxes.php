@@ -225,7 +225,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			&& empty( $deleted )
 			&& empty( $pending ) ):
 		?>
-		<p><?php esc_html_e( 'This post will be automatically sent to Apple News on publish.', 'apple-news' ); ?></p>
+		<p><?php esc_html_e( 'If this post is in a category selected in plugin configuration it will be automatically sent to Apple News on publish.', 'apple-news' ); ?></p>
 		<?php
 		elseif ( 'yes' == $this->settings->get( 'api_async' )
 			&& ! empty( $pending ) ):

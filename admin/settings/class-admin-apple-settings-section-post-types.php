@@ -52,11 +52,32 @@ class Admin_Apple_Settings_Section_Post_Types extends Admin_Apple_Settings_Secti
 			);
 		}
 
+		// Build categories array
+		$categories = get_categories();
+
+		if ( ! empty( $categories ) ) {
+			$categories_options = array();
+			foreach ( $categories as $category ) {
+				$categories_options[ strval($category->term_id) ] = $category->name;
+			}
+
+			$this->settings['categories'] = array(
+				'label'   	=> __( 'Categories', 'apple-news' ),
+				'type'    	=> $categories_options,
+				'multiple' 	=> true,
+				'sanitize'	=> array( $this, 'sanitize_array' ),
+			);
+		}
+
 		// Add the groups
 		$this->groups = array(
 			'post_type_settings' => array(
 				'label'       => __( 'Post Types', 'apple-news' ),
 				'settings'    => array( 'post_types', 'show_metabox' ),
+			),
+			'category_settings' => array(
+				'label'       => __( 'Categories', 'apple-news' ),
+				'settings'    => array( 'categories' ),
 			),
 		);
 

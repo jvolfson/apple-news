@@ -1,5 +1,4 @@
 <?php
-
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
 
@@ -52,6 +51,7 @@ class Admin_Apple_Post_Sync {
 	public function do_publish( $id, $post ) {
 		if ( 'publish' != $post->post_status
 			|| ! in_array( $post->post_type, $this->settings->get( 'post_types' ) )
+			|| ( ! empty( $this->settings->get( 'categories' ) ) && ! empty( array_intersect( wp_get_post_categories($id), $this->settings->get( 'categories' ) ) ) )
 			|| ( ! current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) )
 				&& ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) ) {
 			return;

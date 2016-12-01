@@ -24,6 +24,7 @@ class Settings {
 
 		'post_types'      				=> array( 'post' ),
 		'show_metabox'    				=> 'yes',
+		'categories'					=> array(),
 
 		'layout_margin'   				=> 100,
 		'layout_gutter'   				=> 20,
